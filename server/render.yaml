@@ -1,0 +1,15 @@
+preview_cmd = "npm run build"
+build_cmd = "npm install"
+start_cmd = "node server/server.js"
+routes = [
+  {
+    type = "http",
+    path = "/*"
+  }
+]
+envs = [
+  {
+    key = "NODE_ENV",
+    value = "production"
+  }
+]

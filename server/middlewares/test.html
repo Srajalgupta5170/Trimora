@@ -1,0 +1,119 @@
+<body>
+
+<h2>Queue System</h2>
+
+<!-- ✅ BUTTONS (OUTSIDE SCRIPT) -->
+<button onclick="joinQueue()">Join Queue</button>
+<button onclick="nextCustomer()">Next</button>
+<button onclick="completeService()">Complete</button>
+
+<ul id="queueList"></ul>
+
+<!-- socket script -->
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+<!-- ✅ YOUR JS CODE -->
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+<script>
+const socket = io("http://localhost:5000");
+
+// 🔥 PUT REAL VALUES HERE
+const barberId = "69ec742fc7192e5d5b7f320d";  
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZWM3NDJmYzcxOTJlNWQ1YjdmMzIwZCIsInJvbGUiOiJiYXJiZXIiLCJpYXQiOjE3NzcxMTc0NTcsImV4cCI6MTc3NzIwMzg1N30.hkNcp2beMOwu8ChpWYCpzG2uRaC3pFsSsL5ySwdqDM8eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZWI5YzdlNzU4ZjZhODI3YWM0N2RiNSIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTc3NzExNzUwMiwiZXhwIjoxNzc3MjAzOTAyfQ.6LNFBGU1UvAj3mhcQq1aBLnNmeVZZr2UKzzFf_YcEvo";
+
+// connect
+socket.on("connect", () => {
+  console.log("Connected:", socket.id);
+  fetchQueue();
+});
+
+// realtime update
+socket.on("queueUpdated", () => {
+  fetchQueue();
+});
+
+// ✅ FETCH QUEUE
+async function fetchQueue() {
+  const res = await fetch(`http://localhost:5000/api/queue/${barberId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  console.log("Status:", res.status);
+
+  const data = await res.json();
+  console.log("Queue:", data);
+
+  const list = document.getElementById("queueList");
+  list.innerHTML = "";
+
+  if (!Array.isArray(data)) {
+    list.innerHTML = "❌ Unauthorized or error";
+    return;
+  }
+
+  data.forEach((item) => {
+    const li = document.createElement("li");
+    li.innerText = `Position ${item.position} - ${item.userId.name}`;
+    list.appendChild(li);
+  });
+}
+
+// ✅ BUTTON FUNCTIONS
+
+async function joinQueue() {
+  await fetch("http://localhost:5000/api/queue/join", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify({ barberId })
+  });
+}
+
+async function nextCustomer() {
+  console.log("Next clicked");
+
+  const res = await fetch("http://localhost:5000/api/queue/next", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      barberId: barberId   // 🔥 REQUIRED
+    })
+  });
+
+  const data = await res.json();
+  console.log("NEXT RESPONSE:", data);
+}
+
+async function completeService() {
+  await fetch("http://localhost:5000/api/queue/complete", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      barberId: barberId   // 🔥 ADD THIS
+    })
+  });
+}
+
+
+async function completeService() {
+  await fetch("http://localhost:5000/api/queue/complete", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  });
+}
+</script>
+
+</body>
