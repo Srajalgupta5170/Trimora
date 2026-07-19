@@ -48,6 +48,14 @@ router.post(
   acceptJoinRequest
 );
 
+// Backward-compatible alias for older frontend bundles
+router.post(
+  '/:requestId/approve',
+  protect,
+  authorizeRoles('salonOwner'),
+  acceptJoinRequest
+);
+
 router.post(
   '/:requestId/reject',
   protect,
