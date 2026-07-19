@@ -321,7 +321,7 @@ export const joinRequestAPI = {
     api.get('/api/join-requests/pending'),
 
   acceptRequest: (requestId) =>
-    api.post(`/api/join-requests/${requestId}/approve`, {}),
+    api.post(`/api/join-requests/${requestId}/accept`, {}),
 
   rejectRequest: (requestId, data = {}) =>
     api.post(`/api/join-requests/${requestId}/reject`, data),
