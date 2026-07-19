@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 // Create axios instance with interceptors
 const api = axios.create({
@@ -149,42 +149,42 @@ export const imageAPI = {
   deleteImage: (salonId, imageIndex) =>
     api.delete(`/api/images/${salonId}/gallery/${imageIndex}`),
   setMainImage: (salonId, imageIndex) =>
-    api.put(`/api/ images/${salonId}/gallery/${imageIndex}/set-main`, {}),
+    api.put(`/api/images/${salonId}/gallery/${imageIndex}/set-main`, {}),
 };
 
 // ============== BARBER PROFILE ENDPOINTS ==============
 export const barberProfileAPI = {
   // Public profile
   getPublicProfile: (barberId) =>
-    api.get(`/barber/profile/${barberId}`),
+    api.get(`/api/barber/profile/${barberId}`),
 
   // My profile (authenticated barber)
   getMyProfile: () =>
-    api.get('/barber/me/profile'),
+    api.get('/api/barber/me/profile'),
 
   updateProfile: (data) =>
-    api.put('/barber/me/profile', data),
+    api.put('/api/barber/me/profile', data),
 
   uploadProfileImage: (file) => {
     const formData = new FormData();
     formData.append('image', file);
-    return api.post('/barber/me/profile/image', formData, {
+    return api.post('/api/barber/me/profile/image', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
 
   // Services
   createService: (data) =>
-    api.post('/barber/me/services', data),
+    api.post('/api/barber/me/services', data),
 
   getMyServices: () =>
-    api.get('/barber/me/services'),
+    api.get('/api/barber/me/services'),
 
   updateService: (serviceId, data) =>
-    api.put(`/barber/me/services/${serviceId}`, data),
+    api.put(`/api/barber/me/services/${serviceId}`, data),
 
   deleteService: (serviceId) =>
-    api.delete(`/barber/me/services/${serviceId}`),
+    api.delete(`/api/barber/me/services/${serviceId}`),
 
   // Portfolio
   uploadPortfolioImage: (file, title, description, category) => {
@@ -193,90 +193,90 @@ export const barberProfileAPI = {
     if (title) formData.append('title', title);
     if (description) formData.append('description', description);
     if (category) formData.append('category', category);
-    return api.post('/barber/me/portfolio', formData, {
+    return api.post('/api/barber/me/portfolio', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
 
   getPublicPortfolio: (barberId) =>
-    api.get(`/barber/portfolio/${barberId}`),
+    api.get(`/api/barber/portfolio/${barberId}`),
 
   getMyPortfolio: () =>
-    api.get('/barber/me/portfolio'),
+    api.get('/api/barber/me/portfolio'),
 
   deletePortfolioImage: (imageId) =>
-    api.delete(`/barber/me/portfolio/${imageId}`),
+    api.delete(`/api/barber/me/portfolio/${imageId}`),
 
   updatePortfolioOrder: (images) =>
-    api.put('/barber/me/portfolio/order', { images }),
+    api.put('/api/barber/me/portfolio/order', { images }),
 
   // Reviews
   getBarberReviews: (barberId, page = 1, limit = 10) =>
-    api.get(`/barber/reviews/${barberId}`, { params: { page, limit } }),
+    api.get(`/api/barber/reviews/${barberId}`, { params: { page, limit } }),
 
   // Salon Media
   getSalonMedia: () =>
-    api.get('/barber/me/salon-media'),
+    api.get('/api/barber/me/salon-media'),
 
   // Stats
   getBarberStats: () =>
-    api.get('/barber/me/stats'),
+    api.get('/api/barber/me/stats'),
 
   // Leave/Remove Salon
   leaveSalon: () =>
-    api.post('/barber/me/leave-salon', {}),
+    api.post('/api/barber/me/leave-salon', {}),
 
   removeBarber: (barberId) =>
-    api.delete(`/barber/${barberId}/remove`),
+    api.delete(`/api/barber/${barberId}/remove`),
 };
 
 // ============== REVIEW ENDPOINTS ==============
 export const reviewAPI = {
   // Submit review (customer)
   submitReview: (barberId, data) =>
-    api.post(`/reviews/barber/${barberId}/reviews`, data),
+    api.post(`/api/reviews/barber/${barberId}/reviews`, data),
 
   // Get barber reviews (public)
   getBarberReviews: (barberId, page = 1, limit = 10) =>
-    api.get(`/reviews/barber/${barberId}/reviews`, { params: { page, limit } }),
+    api.get(`/api/reviews/barber/${barberId}/reviews`, { params: { page, limit } }),
 
   // Mark as helpful
   markHelpful: (reviewId) =>
-    api.post(`/reviews/reviews/${reviewId}/helpful`, {}),
+    api.post(`/api/reviews/reviews/${reviewId}/helpful`, {}),
 
   // Barber responses
   respondToReview: (reviewId, text) =>
-    api.post(`/reviews/reviews/${reviewId}/respond`, { text }),
+    api.post(`/api/reviews/reviews/${reviewId}/respond`, { text }),
 
   // Get pending reviews (barber)
   getPendingReviews: () =>
-    api.get('/reviews/me/reviews/pending'),
+    api.get('/api/reviews/me/reviews/pending'),
 
   // Moderate review
   moderateReview: (reviewId, action) =>
-    api.put(`/reviews/reviews/${reviewId}/moderate`, { action }),
+    api.put(`/api/reviews/reviews/${reviewId}/moderate`, { action }),
 };
 
 // ============== SALON MEDIA ENDPOINTS ==============
 export const salonMediaAPI = {
   // Public
   getSalonMedia: (salonId) =>
-    api.get(`/salon/salon/${salonId}/media`),
+    api.get(`/api/salon/salon/${salonId}/media`),
 
   getGallery: (salonId) =>
-    api.get(`/salon/salon/${salonId}/gallery`),
+    api.get(`/api/salon/salon/${salonId}/gallery`),
 
   // Salon owner
   getMySalonMedia: () =>
-    api.get('/salon/me/media'),
+    api.get('/api/salon/me/media'),
 
   updateSalonInfo: (data) =>
-    api.put('/salon/me/info', data),
+    api.put('/api/salon/me/info', data),
 
   uploadLogo: (file) => {
     const formData = new FormData();
     formData.append('logo', file);
-    return api.post('/salon/me/logo', formData, {
+    return api.post('/api/salon/me/logo', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
@@ -284,7 +284,7 @@ export const salonMediaAPI = {
   uploadBanner: (file) => {
     const formData = new FormData();
     formData.append('banner', file);
-    return api.post('/salon/me/banner', formData, {
+    return api.post('/api/salon/me/banner', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
@@ -293,38 +293,38 @@ export const salonMediaAPI = {
     const formData = new FormData();
     formData.append('image', file);
     if (title) formData.append('title', title);
-    return api.post('/salon/me/gallery', formData, {
+    return api.post('/api/salon/me/gallery', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
 
   removeGalleryImage: (imageIndex) =>
-    api.delete(`/salon/me/gallery/${imageIndex}`),
+    api.delete(`/api/salon/me/gallery/${imageIndex}`),
 
   updateGalleryOrder: (images) =>
-    api.put('/salon/me/gallery/order', { images }),
+    api.put('/api/salon/me/gallery/order', { images }),
 };
 
 export const joinRequestAPI = {
   // Barber endpoints
   requestJoinSalon: (data) =>
-    api.post('/join-requests/request', data),
+    api.post('/api/join-requests/request', data),
 
   getMyRequests: () =>
-    api.get('/join-requests/my-requests'),
+    api.get('/api/join-requests/my-requests'),
 
   cancelRequest: (requestId) =>
-    api.delete(`/join-requests/${requestId}/cancel`),
+    api.delete(`/api/join-requests/${requestId}/cancel`),
 
   // Salon owner endpoints
   getPendingRequests: () =>
-    api.get('/join-requests/pending'),
+    api.get('/api/join-requests/pending'),
 
   acceptRequest: (requestId) =>
-    api.post(`/join-requests/${requestId}/accept`),
+    api.post(`/api/join-requests/${requestId}/approve`, {}),
 
   rejectRequest: (requestId, data = {}) =>
-    api.post(`/join-requests/${requestId}/reject`, data),
+    api.post(`/api/join-requests/${requestId}/reject`, data),
 };
 
 export default api;
