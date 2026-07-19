@@ -4,7 +4,7 @@ import connectDB from './config/db.js';
 import Salon from './models/Salon.js';
 import BarberProfile from './models/BarberProfile.js';
 import Service from './models/Service.js';
-import User from './models/User.js';
+import User from './models/user.js';
 
 dotenv.config();
 

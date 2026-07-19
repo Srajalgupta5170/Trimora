@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
-import User from './models/User.js';
+import User from './models/user.js';
 import BarberProfile from './models/BarberProfile.js';
 import Salon from './models/Salon.js';
 

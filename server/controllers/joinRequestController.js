@@ -1,7 +1,7 @@
 import JoinRequest from '../models/JoinRequest.js';
 import BarberProfile from '../models/BarberProfile.js';
 import Salon from '../models/Salon.js';
-import User from '../models/User.js';
+import User from '../models/user.js';
 
 /**
  * Barber submits a request to join a salon

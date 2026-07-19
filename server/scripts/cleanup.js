@@ -12,7 +12,7 @@ import connectDB from '../config/db.js';
 import Queue from '../models/Queue.js';
 import Appointment from '../models/Appointment.js';
 import Service from '../models/Service.js';
-import User from '../models/User.js';
+import User from '../models/user.js';
 import Salon from '../models/Salon.js';
 import BarberProfile from '../models/BarberProfile.js';
 
