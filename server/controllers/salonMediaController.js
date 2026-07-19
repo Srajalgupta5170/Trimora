@@ -23,10 +23,16 @@ export const getSalonMedia = async (req, res) => {
       return res.status(400).json({ error: 'Invalid salon ID' });
     }
 
-    const media = await SalonMedia.findOne({ salonId });
+    let media = await SalonMedia.findOne({ salonId });
 
+    // If no media exists, return empty media object (don't fail)
     if (!media) {
-      return res.status(404).json({ error: 'Salon media not found' });
+      media = {
+        salonId,
+        logo: { url: null, cloudinaryId: null },
+        banner: { url: null, cloudinaryId: null },
+        gallery: []
+      };
     }
 
     res.json({
@@ -124,16 +130,17 @@ export const uploadLogo = async (req, res) => {
   try {
     console.log('=== uploadLogo ===');
     console.log('File received:', req.file ? 'Yes' : 'No');
-    console.log('File details:', req.file ? { filename: req.file.filename, size: req.file.size } : 'No file');
+    console.log('User:', req.user ? `ID=${req.user.id}, Role=${req.user.role}` : 'No user');
     
     if (!req.file) {
       return res.status(400).json({ error: 'No logo image provided' });
     }
 
     const salon = await Salon.findOne({ ownerId: req.user.id });
+    console.log('Salon found:', salon ? `ID=${salon._id}, Name=${salon.name}` : 'No');
 
     if (!salon) {
-      return res.status(404).json({ error: 'Salon not found' });
+      return res.status(404).json({ error: 'Salon not found for this owner' });
     }
 
     let media = await SalonMedia.findOne({ salonId: salon._id });
@@ -142,14 +149,16 @@ export const uploadLogo = async (req, res) => {
       media = new SalonMedia({ salonId: salon._id });
     }
 
-    console.log('Setting logo URL:', req.file.secure_url || req.file.path);
+    const logoUrl = req.file.secure_url || req.file.path;
+    console.log('Setting logo URL:', logoUrl);
     
     media.logo = {
-      url: req.file.secure_url || req.file.path,
+      url: logoUrl,
       cloudinaryId: getCloudinaryId(req.file)
     };
 
     await media.save();
+    console.log('✅ Logo saved successfully');
 
     res.json({
       success: true,
@@ -157,8 +166,11 @@ export const uploadLogo = async (req, res) => {
       logo: media.logo
     });
   } catch (error) {
-    console.error('Error uploading logo:', error);
-    res.status(500).json({ error: 'Server error', details: error.message });
+    console.error('❌ Error uploading logo:', error);
+    res.status(500).json({ 
+      error: 'Server error uploading logo', 
+      details: error.message 
+    });
   }
 };
 
@@ -167,14 +179,19 @@ export const uploadLogo = async (req, res) => {
  */
 export const uploadBanner = async (req, res) => {
   try {
+    console.log('=== uploadBanner ===');
+    console.log('File received:', req.file ? 'Yes' : 'No');
+    console.log('User:', req.user ? `ID=${req.user.id}, Role=${req.user.role}` : 'No user');
+    
     if (!req.file) {
       return res.status(400).json({ error: 'No banner image provided' });
     }
 
     const salon = await Salon.findOne({ ownerId: req.user.id });
+    console.log('Salon found:', salon ? `ID=${salon._id}, Name=${salon.name}` : 'No');
 
     if (!salon) {
-      return res.status(404).json({ error: 'Salon not found' });
+      return res.status(404).json({ error: 'Salon not found for this owner' });
     }
 
     let media = await SalonMedia.findOne({ salonId: salon._id });
@@ -183,12 +200,16 @@ export const uploadBanner = async (req, res) => {
       media = new SalonMedia({ salonId: salon._id });
     }
 
+    const bannerUrl = req.file.secure_url || req.file.path;
+    console.log('Setting banner URL:', bannerUrl);
+
     media.banner = {
-      url: req.file.secure_url || req.file.path,
+      url: bannerUrl,
       cloudinaryId: getCloudinaryId(req.file)
     };
 
     await media.save();
+    console.log('✅ Banner saved successfully');
 
     res.json({
       success: true,
@@ -196,8 +217,11 @@ export const uploadBanner = async (req, res) => {
       banner: media.banner
     });
   } catch (error) {
-    console.error('Error uploading banner:', error);
-    res.status(500).json({ error: 'Server error' });
+    console.error('❌ Error uploading banner:', error);
+    res.status(500).json({ 
+      error: 'Server error uploading banner', 
+      details: error.message 
+    });
   }
 };
 
@@ -206,6 +230,10 @@ export const uploadBanner = async (req, res) => {
  */
 export const addGalleryImage = async (req, res) => {
   try {
+    console.log('=== addGalleryImage ===');
+    console.log('File received:', req.file ? 'Yes' : 'No');
+    console.log('User:', req.user ? `ID=${req.user.id}, Role=${req.user.role}` : 'No user');
+    
     if (!req.file) {
       return res.status(400).json({ error: 'No image provided' });
     }
@@ -213,9 +241,10 @@ export const addGalleryImage = async (req, res) => {
     const { title } = req.body;
 
     const salon = await Salon.findOne({ ownerId: req.user.id });
+    console.log('Salon found:', salon ? `ID=${salon._id}, Name=${salon.name}` : 'No');
 
     if (!salon) {
-      return res.status(404).json({ error: 'Salon not found' });
+      return res.status(404).json({ error: 'Salon not found for this owner' });
     }
 
     let media = await SalonMedia.findOne({ salonId: salon._id });
@@ -224,16 +253,20 @@ export const addGalleryImage = async (req, res) => {
       media = new SalonMedia({ salonId: salon._id });
     }
 
+    const imageUrl = req.file.secure_url || req.file.path;
+    console.log('Adding gallery image:', imageUrl);
+
     const displayOrder = media.gallery.length;
 
     media.gallery.push({
-      url: req.file.secure_url || req.file.path,
+      url: imageUrl,
       cloudinaryId: getCloudinaryId(req.file),
       title: title || 'Gallery Image',
       displayOrder
     });
 
     await media.save();
+    console.log('✅ Gallery image saved successfully');
 
     res.status(201).json({
       success: true,
@@ -241,8 +274,11 @@ export const addGalleryImage = async (req, res) => {
       image: media.gallery[media.gallery.length - 1]
     });
   } catch (error) {
-    console.error('Error adding gallery image:', error);
-    res.status(500).json({ error: 'Server error' });
+    console.error('❌ Error adding gallery image:', error);
+    res.status(500).json({ 
+      error: 'Server error adding gallery image', 
+      details: error.message 
+    });
   }
 };
 

@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 export default function HomePage({ onSelectSalon }) {
   const [salons, setSalons] = useState([]);
+  const [salonsMedia, setSalonsMedia] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -16,6 +17,24 @@ export default function HomePage({ onSelectSalon }) {
     try {
       const response = await axios.get('http://localhost:5000/api/booking/salons');
       setSalons(response.data);
+      
+      // Fetch media for all salons in parallel
+      const mediaMap = {};
+      await Promise.all(
+        response.data.map(async (salon) => {
+          try {
+            const mediaRes = await axios.get(
+              `http://localhost:5000/api/salonMedia/salon/${salon._id}/media`
+            );
+            mediaMap[salon._id] = mediaRes.data.media || {};
+          } catch (err) {
+            console.error(`Error fetching media for salon ${salon._id}:`, err);
+            mediaMap[salon._id] = {};
+          }
+        })
+      );
+      
+      setSalonsMedia(mediaMap);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching salons:', error);
@@ -79,7 +98,7 @@ export default function HomePage({ onSelectSalon }) {
                   {/* Image */}
                   <div className="relative h-48 overflow-hidden">
                     <img
-                      src={salon.image}
+                      src={salonsMedia[salon._id]?.banner?.url || salon.image}
                       alt={salon.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />

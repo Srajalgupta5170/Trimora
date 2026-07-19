@@ -306,6 +306,18 @@ export const uploadPortfolioImage = async (req, res) => {
       return res.status(404).json({ error: 'Barber profile not found' });
     }
 
+    // Normalize category - convert to match enum
+    const validCategories = ['Haircut', 'Beard', 'Design', 'Fade', 'Transformation', 'Other'];
+    let normalizedCategory = category || 'Other';
+    
+    // Handle lowercase or different cases
+    if (normalizedCategory) {
+      const found = validCategories.find(
+        c => c.toLowerCase() === normalizedCategory.toLowerCase()
+      );
+      normalizedCategory = found || 'Other';
+    }
+
     // Get highest displayOrder
     const lastImage = await Portfolio.findOne({ barberId: barber._id })
       .sort({ displayOrder: -1 });
@@ -318,7 +330,7 @@ export const uploadPortfolioImage = async (req, res) => {
       cloudinaryId: getCloudinaryId(req.file),
       title: title || 'Work Sample',
       description,
-      category: category || 'Other',
+      category: normalizedCategory,
       displayOrder
     });
 

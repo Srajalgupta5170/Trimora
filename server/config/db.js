@@ -1,22 +1,43 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
+// Try to use a real MongoDB URI; if it fails (or none provided)
+// fall back to an in-memory MongoDB (mongodb-memory-server) for local testing.
 const connectDB = async () => {
-  try {
-    // Debug logging
-    console.log("MONGO_URI from env:", process.env.MONGO_URI);
-    
-    // Use explicit connection string as fallback
-    const mongoUri = process.env.MONGO_URI || 'mongodb+srv://srajalgupta5170_db_user:VsvB54HLGecySZNN@cluster0.b78eukr.mongodb.net/?appName=Cluster0';
-    
-    if (!mongoUri) {
-      throw new Error('MONGO_URI not found in environment variables');
-    }
-    
-    const conn = await mongoose.connect(mongoUri);
+  const envUri = process.env.MONGO_URI;
 
+  console.log('MONGO_URI from env:', envUri ? 'Set (hidden)' : 'Not set');
+
+  // Helper to connect and log
+  const doConnect = async (uri) => {
+    const conn = await mongoose.connect(uri);
     console.log(`MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error(error);
+  };
+
+  // If an env URI is provided, try to connect to it first
+  if (envUri) {
+    try {
+      await doConnect(envUri);
+      return;
+    } catch (err) {
+      console.error('Failed to connect to provided MONGO_URI:', err.message);
+      console.error('Falling back to in-memory MongoDB for local testing.');
+    }
+  }
+
+  // Fallback: use mongodb-memory-server for local testing
+  try {
+    // Dynamically import to keep this as an optional dev-time dependency
+    const { MongoMemoryServer } = await import('mongodb-memory-server');
+    const mongod = await MongoMemoryServer.create();
+    const uri = mongod.getUri();
+
+    // Keep the mongod instance alive by attaching to process for cleanup
+    process.mongoMemoryServer = mongod;
+
+    await doConnect(uri);
+    console.log('Connected to in-memory MongoDB instance');
+  } catch (err) {
+    console.error('Failed to start in-memory MongoDB:', err);
     process.exit(1);
   }
 };

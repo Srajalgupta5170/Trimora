@@ -8,11 +8,13 @@ export default function SalonDetailsPage() {
   const { salonId } = useParams();
   const navigate = useNavigate();
   const [salon, setSalon] = useState(null);
+  const [salonMedia, setSalonMedia] = useState(null);
   const [barbers, setBarbers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchSalonDetails();
+    fetchSalonMedia();
     fetchBarbers();
   }, [salonId]);
 
@@ -22,6 +24,21 @@ export default function SalonDetailsPage() {
       setSalon(response.data);
     } catch (error) {
       console.error('Error fetching salon:', error);
+    }
+  };
+
+  const fetchSalonMedia = async () => {
+    try {
+      const url = `http://localhost:5000/api/salonMedia/salon/${salonId}/media`;
+      console.log('🔍 Fetching salon media from:', url);
+      const response = await axios.get(url);
+      console.log('📦 API Response:', response.data);
+      const mediaData = response.data.media || response.data;
+      console.log('✅ Setting salonMedia:', mediaData);
+      setSalonMedia(mediaData);
+    } catch (error) {
+      console.error('❌ Error fetching salon media:', error.message);
+      console.error('Error details:', error.response?.data || error);
     }
   };
 
@@ -55,24 +72,35 @@ export default function SalonDetailsPage() {
 
   return (
     <div className="min-h-screen bg-slate-950">
-      {/* Header */}
+      {/* Header with Banner */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="relative h-60 overflow-hidden"
       >
         <img
-          src={salon.image}
-          alt={salon.name}
+          src={salonMedia?.banner?.url || salon?.image}
+          alt={salon?.name}
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/20 via-slate-950/40 to-slate-950" />
+
+        {/* Logo - Top Left */}
+        {salonMedia?.logo?.url && (
+          <div className="absolute top-6 left-6 z-20">
+            <img
+              src={salonMedia.logo.url}
+              alt="Salon Logo"
+              className="h-12 w-12 rounded-lg border border-white/20 object-cover shadow-lg"
+            />
+          </div>
+        )}
 
         {/* Back Button */}
         <motion.button
           whileHover={{ scale: 1.1 }}
           onClick={() => navigate(-1)}
-          className="absolute top-6 left-6 p-2 rounded-full bg-slate-900/80 backdrop-blur-xl hover:bg-slate-800 text-white border border-white/20"
+          className="absolute top-6 right-6 p-2 rounded-full bg-slate-900/80 backdrop-blur-xl hover:bg-slate-800 text-white border border-white/20"
         >
           <ArrowLeft className="w-6 h-6" />
         </motion.button>
@@ -191,6 +219,45 @@ export default function SalonDetailsPage() {
             </Link>
           ))}
         </motion.div>
+
+        {/* Gallery Section */}
+        {salonMedia?.gallery && salonMedia.gallery.length > 0 ? (
+          <div className="mt-16">
+            <h2 className="text-2xl font-bold text-white mb-6">Gallery ({salonMedia.gallery.length} images)</h2>
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20"
+            >
+              {salonMedia.gallery.map((image, index) => (
+                <motion.div
+                  key={index}
+                  variants={itemVariants}
+                  whileHover={{ y: -8 }}
+                  className="relative rounded-2xl overflow-hidden border border-white/10 backdrop-blur-xl bg-white/5 hover:bg-white/10 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-purple-500/20 group cursor-pointer"
+                >
+                  <div className="relative h-64 overflow-hidden bg-gradient-to-br from-indigo-600/20 to-purple-600/20">
+                    <img
+                      src={image.url}
+                      alt={image.title || 'Salon Gallery'}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  {image.title && (
+                    <div className="p-4">
+                      <p className="text-sm text-slate-300 font-medium">{image.title}</p>
+                    </div>
+                  )}
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        ) : (
+          <div className="mt-16 text-center text-slate-500">
+            No gallery images yet
+          </div>
+        )}
       </div>
     </div>
   );

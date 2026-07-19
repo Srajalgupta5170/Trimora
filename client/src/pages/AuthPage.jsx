@@ -31,7 +31,7 @@ export default function AuthPage({ onAuthenticate }) {
             <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 ring-1 ring-white/10">
               <Scissors className="text-white w-6 h-6" />
             </div>
-            <h1 className="text-2xl font-bold tracking-tight text-white">Timora</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-white">Trimora</h1>
           </div>
         </div>
 
@@ -40,7 +40,7 @@ export default function AuthPage({ onAuthenticate }) {
             Skip the wait.<br />Join the flow.
           </h2>
           <p className="text-xl text-slate-400 leading-relaxed mb-12">
-            Timora is your smart queue management system. Browse salons, book appointments, and skip the wait. Join the flow today.
+            Trimora is your smart queue management system. Browse salons, book appointments, and skip the wait. Join the flow today.
           </p>
 
           <div className="flex items-center gap-4 bg-slate-900/60 p-4 rounded-2xl border border-white/5 backdrop-blur-md max-w-md shadow-2xl">
@@ -59,7 +59,7 @@ export default function AuthPage({ onAuthenticate }) {
         </div>
 
         <div className="relative z-10 text-sm text-slate-500 font-medium">
-          © 2026 Timora App. All rights reserved.
+          © 2026 Trimora App. All rights reserved.
         </div>
       </div>
 
@@ -75,7 +75,7 @@ export default function AuthPage({ onAuthenticate }) {
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
               <Scissors className="text-white w-5 h-5" />
             </div>
-            <h1 className="text-xl font-bold tracking-tight text-white">Timora</h1>
+            <h1 className="text-xl font-bold tracking-tight text-white">Trimora</h1>
           </div>
 
           <div className="bg-slate-950/40 border border-slate-800/60 p-8 sm:p-10 rounded-3xl backdrop-blur-xl shadow-[0_0_50px_rgba(0,0,0,0.3)] ring-1 ring-white/5">

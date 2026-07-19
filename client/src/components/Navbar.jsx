@@ -22,7 +22,7 @@ export default function Navbar() {
         <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
           <Scissors className="text-white w-5 h-5" />
         </div>
-        <h1 className="text-lg md:text-xl font-bold tracking-tight text-white hidden sm:block">Timora</h1>
+        <h1 className="text-lg md:text-xl font-bold tracking-tight text-white hidden sm:block">Trimora</h1>
       </Link>
 
       {/* Center Navigation - Desktop */}

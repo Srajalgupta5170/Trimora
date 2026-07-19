@@ -1,7 +1,7 @@
-# Timora - Deployment Guide
+# Trimora - Deployment Guide
 
 ## Overview
-This guide covers deploying the Timora application:
+This guide covers deploying the Trimora application:
 - **Frontend**: React + Vite → Vercel
 - **Backend**: Node.js + Express → Render
 - **Database**: MongoDB Atlas (already cloud-hosted)
@@ -37,7 +37,7 @@ This guide covers deploying the Timora application:
 2. **Create `.env` file in server folder** (with your actual values)
    ```
    NODE_ENV=production
-   MONGODB_URI=mongodb+srv://your-username:password@cluster.mongodb.net/timora
+   MONGODB_URI=mongodb+srv://your-username:password@cluster.mongodb.net/trimora
    JWT_SECRET=your-super-secret-key-change-this
    PORT=5000
    CLOUDINARY_CLOUD_NAME=your-cloud
@@ -66,7 +66,7 @@ This guide covers deploying the Timora application:
 1. Click "New +" → "Web Service"
 2. Connect your GitHub repository
 3. **Configuration:**
-   - **Name**: timora-backend
+   - **Name**: trimora-backend
    - **Runtime**: Node.js
    - **Build Command**: `npm install`
    - **Start Command**: `node server/server.js`
@@ -87,7 +87,7 @@ FRONTEND_URL=<your-vercel-url>
 
 ### 2.4 Deploy
 - Render auto-deploys on push to main branch
-- You'll get a URL like: `https://timora-backend.onrender.com`
+- You'll get a URL like: `https://trimora-backend.onrender.com`
 - Copy this URL for frontend configuration
 
 ---
@@ -111,13 +111,13 @@ FRONTEND_URL=<your-vercel-url>
 ### 3.3 Add Environment Variables
 In Vercel dashboard, add:
 ```
-VITE_API_URL=https://timora-backend.onrender.com/api
+VITE_API_URL=https://trimora-backend.onrender.com/api
 ```
 
 ### 3.4 Deploy
 - Click "Deploy"
 - Vercel will build and deploy automatically
-- You'll get a URL like: `https://timora.vercel.app`
+- You'll get a URL like: `https://trimora.vercel.app`
 
 ---
 
@@ -189,4 +189,4 @@ Then push to trigger Render redeploy.
 
 ## Production Deployment Completed! 🚀
 
-Your Timora application is now live and accessible worldwide!
+Your Trimora application is now live and accessible worldwide!
