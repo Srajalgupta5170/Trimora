@@ -44,7 +44,7 @@ export const authAPI = {
   signup: (data) =>
     api.post('/auth/signup', data),
   registerSalon: (data) =>
-    api.post('/auth/register-salon', data),
+    api.post('/api/auth/register-salon', data),
   getProfile: () =>
     api.get('/auth/profile'),
   getAvailableSalons: () =>
