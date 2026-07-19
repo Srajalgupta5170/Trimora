@@ -40,92 +40,92 @@ api.interceptors.response.use(
 // ============== AUTH ENDPOINTS ==============
 export const authAPI = {
   login: (credentials) =>
-    api.post('/auth/login', credentials),
+    api.post('/api/auth/login', credentials),
   signup: (data) =>
-    api.post('/auth/signup', data),
+    api.post('/api/auth/signup', data),
   registerSalon: (data) =>
     api.post('/api/auth/register-salon', data),
   getProfile: () =>
-    api.get('/auth/profile'),
+    api.get('/api/auth/profile'),
   getAvailableSalons: () =>
-    api.get('/auth/available-salons'),
+    api.get('/api/auth/available-salons'),
 };
 
 // ============== BOOKING ENDPOINTS ==============
 export const bookingAPI = {
   // Salons
   getAllSalons: () =>
-    api.get('/booking/salons'),
+    api.get('/api/booking/salons'),
   getMySalons: () =>
-    api.get('/booking/my-salons'),
+    api.get('/api/booking/my-salons'),
   getSalonDetails: (salonId) =>
-    api.get(`/booking/salons/${salonId}`),
+    api.get(`/api/booking/salons/${salonId}`),
   getSalonBarbers: (salonId) =>
-    api.get(`/booking/salons/${salonId}/barbers`),
+    api.get(`/api/booking/salons/${salonId}/barbers`),
   getSalonStats: (salonId) =>
-    api.get(`/booking/salon/${salonId}/stats`),
+    api.get(`/api/booking/salon/${salonId}/stats`),
   getSalonQueues: (salonId) =>
-    api.get(`/booking/salon/${salonId}/queues`),
+    api.get(`/api/booking/salon/${salonId}/queues`),
 
   // Barber Profile
   getBarberProfile: () =>
-    api.get('/booking/barber/my-profile'),
+    api.get('/api/booking/barber/my-profile'),
   getBarberDetails: (barberId) =>
-    api.get(`/booking/barber/${barberId}`),
+    api.get(`/api/booking/barber/${barberId}`),
   joinSalon: (salonId) =>
-    api.post('/booking/join-salon', { salonId }),
+    api.post('/api/booking/join-salon', { salonId }),
 
   // Queue Operations (use /queue routes, NOT /booking/queue)
   joinQueue: (data) =>
-    api.post('/queue/join', data),
+    api.post('/api/queue/join', data),
   
   leaveQueue: () =>
-    api.post('/queue/leave', {}),
+    api.post('/api/queue/leave', {}),
   
   getMyQueuePosition: () =>
-    api.get('/queue/my-position'),
+    api.get('/api/queue/my-position'),
   
   getMyQueueStatus: (barberId) =>
-    api.get(`/queue/my-status/${barberId}`),
+    api.get(`/api/queue/my-status/${barberId}`),
   
   getPublicBarberQueue: (barberId) =>
-    api.get(`/queue/barber/${barberId}/public`),
+    api.get(`/api/queue/barber/${barberId}/public`),
   
   getBarberQueue: (barberId) =>
-    api.get(`/queue/barber/${barberId}`),
+    api.get(`/api/queue/barber/${barberId}`),
   
   callNextCustomer: (barberId) =>
-    api.post(`/queue/barber/${barberId}/next`, {}),
+    api.post(`/api/queue/barber/${barberId}/next`, {}),
   
   completeService: (barberId, data = {}) =>
-    api.post(`/queue/barber/${barberId}/complete`, data),
+    api.post(`/api/queue/barber/${barberId}/complete`, data),
   
   getQueueStats: (barberId) =>
-    api.get(`/queue/barber/${barberId}/stats`),
+    api.get(`/api/queue/barber/${barberId}/stats`),
 };
 
 // ============== EARNINGS ENDPOINTS ==============
 export const earningsAPI = {
   getBarberOverview: () =>
-    api.get('/earnings/barber/overview'),
+    api.get('/api/earnings/barber/overview'),
   getBarberBreakdown: (barberId) =>
-    api.get(`/earnings/barber/${barberId}/breakdown`),
+    api.get(`/api/earnings/barber/${barberId}/breakdown`),
   getSalonOverview: () =>
-    api.get('/earnings/salon/overview'),
+    api.get('/api/earnings/salon/overview'),
 };
 
 // ============== BARBER REQUEST ENDPOINTS ==============
 export const barberRequestAPI = {
   requestSalon: (data) =>
-    api.post('/barber-requests/request-salon', data),
+    api.post('/api/barber-requests/request-salon', data),
   getMyRequests: () =>
-    api.get('/barber-requests/my-requests'),
+    api.get('/api/barber-requests/my-requests'),
   getPendingRequests: () =>
-    api.get('/barber-requests/pending'),
+    api.get('/api/barber-requests/pending'),
   approveRequest: (requestId) =>
-    api.post(`/barber-requests/${requestId}/approve`, {}),
+    api.post(`/api/barber-requests/${requestId}/approve`, {}),
   rejectRequest: (requestId, reason) =>
-    api.post(`/barber-requests/${requestId}/reject`, { reason }),
+    api.post(`/api/barber-requests/${requestId}/reject`, { reason }),
 };
 
 // ============== IMAGE ENDPOINTS ==============
@@ -133,23 +133,23 @@ export const imageAPI = {
   uploadImage: (salonId, file) => {
     const formData = new FormData();
     formData.append('file', file);
-    return api.post(`/images/${salonId}/upload`, formData, {
+    return api.post(`/api/images/${salonId}/upload`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
   uploadMultipleImages: (salonId, files) => {
     const formData = new FormData();
     files.forEach((file) => formData.append('files', file));
-    return api.post(`/images/${salonId}/upload-multiple`, formData, {
+    return api.post(`/api/images/${salonId}/upload-multiple`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
   getSalonGallery: (salonId) =>
-    api.get(`/images/${salonId}/gallery`),
+    api.get(`/api/images/${salonId}/gallery`),
   deleteImage: (salonId, imageIndex) =>
-    api.delete(`/images/${salonId}/gallery/${imageIndex}`),
+    api.delete(`/api/images/${salonId}/gallery/${imageIndex}`),
   setMainImage: (salonId, imageIndex) =>
-    api.put(`/images/${salonId}/gallery/${imageIndex}/set-main`, {}),
+    api.put(`/api/ images/${salonId}/gallery/${imageIndex}/set-main`, {}),
 };
 
 // ============== BARBER PROFILE ENDPOINTS ==============
